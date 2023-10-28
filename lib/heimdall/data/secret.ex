@@ -9,7 +9,7 @@ defmodule Heimdall.Data.Secret do
   @primary_key {:id, :binary_id, autogenerate: true}
   @timestamps_opts [type: :utc_datetime]
 
-  @valid_encryption_algo ~w[
+  @encryption_algos ~w[
     aes_gcm
     plaintext
     rsa
@@ -21,8 +21,11 @@ defmodule Heimdall.Data.Secret do
   schema "secrets" do
     field(:title, :string)
     field(:encrypted_text, :string)
-    field(:encryption_algo, Ecto.Enum, values: @valid_encryption_algo)
-    field(:encryption_key, :string)
+    field(:encryption_algo, Ecto.Enum, values: @encryption_algos)
+
+    # Only for encrypting; we don't save it in the DB
+    field(:encryption_key, :string, virtual: true)
+
     field(:expires_at, :utc_datetime)
     field(:max_reads, :integer)
     field(:max_decryption_attempts, :integer)
@@ -56,4 +59,7 @@ defmodule Heimdall.Data.Secret do
       expires_at
     ]a)
   end
+
+  @spec encryption_algos :: [algo()]
+  def encryption_algos, do: @encryption_algos
 end

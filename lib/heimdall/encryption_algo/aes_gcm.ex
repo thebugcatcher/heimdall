@@ -35,8 +35,8 @@ defmodule Heimdall.EncryptionAlgo.AesGcm do
   def decrypt(encrypted, key) do
     secret_key = prepare_key(key)
 
-    <<initialization_vector::binary-16, ciphertag::binary-16, ciphertext::binary>> =
-      :base64.decode(encrypted)
+    <<initialization_vector::binary-16, ciphertag::binary-16,
+      ciphertext::binary>> = :base64.decode(encrypted)
 
     :crypto.crypto_one_time_aead(
       :aes_gcm,

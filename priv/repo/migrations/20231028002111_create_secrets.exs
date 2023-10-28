@@ -8,7 +8,6 @@ defmodule Heimdall.Repo.Migrations.CreateSecrets do
       add(:title, :string)
       add(:encrypted_text, :text)
       add(:encryption_algo, :string)
-      add(:encryption_key, :text)
       add(:expires_at, :utc_datetime)
       add(:max_reads, :integer)
       add(:max_decryption_attempts, :integer)

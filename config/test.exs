@@ -10,7 +10,8 @@ config :heimdall, Heimdall.Repo,
 
 config :heimdall, HeimdallWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "arZhjZ3azvw2rTVcrj3+KdsR0XH0SC5nTA5bye0tZwXG/C1EVwjPfmyCHTEHLoEV",
+  secret_key_base:
+    "arZhjZ3azvw2rTVcrj3+KdsR0XH0SC5nTA5bye0tZwXG/C1EVwjPfmyCHTEHLoEV",
   server: false
 
 # Disable swoosh api client as it is only required for production adapters.
@@ -21,3 +22,5 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :heimdall, dev_routes: true

@@ -17,28 +17,28 @@ defmodule HeimdallWeb.Router do
   scope "/", HeimdallWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    get "/", SecretController, :new
+
+    post "/secrets", SecretController, :create
+
+    get "/successfully_created", SecretController, :successfully_created
+
+    get "/secrets/:secret_id", SecretController, :show
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", HeimdallWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", HeimdallWeb.API do
+    pipe_through :api
 
-  # Enable LiveDashboard and Swoosh mailbox preview in development
+    get "/health", HealthController, :index
+  end
+
   if Application.compile_env(:heimdall, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
       pipe_through :browser
 
       live_dashboard "/dashboard", metrics: HeimdallWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
 end

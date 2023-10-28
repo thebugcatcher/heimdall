@@ -52,7 +52,11 @@ defmodule HeimdallWeb.CoreComponents do
       data-cancel={JS.exec(@on_cancel, "phx-remove")}
       class="relative z-50 hidden"
     >
-      <div id={"#{@id}-bg"} class="bg-zinc-50/90 fixed inset-0 transition-opacity" aria-hidden="true" />
+      <div
+        id={"#{@id}-bg"}
+        class="bg-zinc-50/90 fixed inset-0 transition-opacity"
+        aria-hidden="true"
+      />
       <div
         class="fixed inset-0 overflow-y-auto"
         aria-labelledby={"#{@id}-title"}
@@ -102,10 +106,16 @@ defmodule HeimdallWeb.CoreComponents do
   attr :id, :string, default: "flash", doc: "the optional id of flash container"
   attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
   attr :title, :string, default: nil
-  attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
-  attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
 
-  slot :inner_block, doc: "the optional inner block that renders the flash message"
+  attr :kind, :atom,
+    values: [:info, :error],
+    doc: "used for styling and flash lookup"
+
+  attr :rest, :global,
+    doc: "the arbitrary HTML attributes to add to the flash container"
+
+  slot :inner_block,
+    doc: "the optional inner block that renders the flash message"
 
   def flash(assigns) do
     ~H"""
@@ -116,19 +126,39 @@ defmodule HeimdallWeb.CoreComponents do
       role="alert"
       class={[
         "fixed top-2 right-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1",
-        @kind == :info && "bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900",
-        @kind == :error && "bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900"
+        @kind == :info &&
+          "bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900",
+        @kind == :error &&
+          "bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900"
       ]}
       {@rest}
     >
-      <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
-        <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
-        <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
+      <p
+        :if={@title}
+        class="flex items-center gap-1.5 text-sm font-semibold leading-6"
+      >
+        <.icon
+          :if={@kind == :info}
+          name="hero-information-circle-mini"
+          class="h-4 w-4"
+        />
+        <.icon
+          :if={@kind == :error}
+          name="hero-exclamation-circle-mini"
+          class="h-4 w-4"
+        />
         <%= @title %>
       </p>
       <p class="mt-2 text-sm leading-5"><%= msg %></p>
-      <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
-        <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
+      <button
+        type="button"
+        class="group absolute top-1 right-1 p-2"
+        aria-label={gettext("close")}
+      >
+        <.icon
+          name="hero-x-mark-solid"
+          class="h-5 w-5 opacity-40 group-hover:opacity-70"
+        />
       </button>
     </div>
     """
@@ -155,7 +185,8 @@ defmodule HeimdallWeb.CoreComponents do
       phx-connected={hide("#disconnected")}
       hidden
     >
-      Attempting to reconnect <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
+      Attempting to reconnect
+      <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
     </.flash>
     """
   end
@@ -174,7 +205,10 @@ defmodule HeimdallWeb.CoreComponents do
       </.simple_form>
   """
   attr :for, :any, required: true, doc: "the datastructure for the form"
-  attr :as, :any, default: nil, doc: "the server side parameter to collect all input under"
+
+  attr :as, :any,
+    default: nil,
+    doc: "the server side parameter to collect all input under"
 
   attr :rest, :global,
     include: ~w(autocomplete name rel action enctype method novalidate target),
@@ -188,7 +222,10 @@ defmodule HeimdallWeb.CoreComponents do
     <.form :let={f} for={@for} as={@as} {@rest}>
       <div class="mt-10 space-y-8 bg-white">
         <%= render_slot(@inner_block, f) %>
-        <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
+        <div
+          :for={action <- @actions}
+          class="mt-2 flex items-center justify-between gap-6"
+        >
           <%= render_slot(action, f) %>
         </div>
       </div>
@@ -245,21 +282,29 @@ defmodule HeimdallWeb.CoreComponents do
 
   attr :type, :string,
     default: "text",
-    values: ~w(checkbox color date datetime-local email file hidden month number password
+    values:
+      ~w(checkbox color date datetime-local email file hidden month number password
                range radio search select tel text textarea time url week)
 
   attr :field, Phoenix.HTML.FormField,
-    doc: "a form field struct retrieved from the form, for example: @form[:email]"
+    doc:
+      "a form field struct retrieved from the form, for example: @form[:email]"
 
   attr :errors, :list, default: []
   attr :checked, :boolean, doc: "the checked flag for checkbox inputs"
   attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
-  attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
-  attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
+
+  attr :options, :list,
+    doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
+
+  attr :multiple, :boolean,
+    default: false,
+    doc: "the multiple flag for select inputs"
 
   attr :rest, :global,
-    include: ~w(autocomplete cols disabled form list max maxlength min minlength
-                pattern placeholder readonly required rows size step)
+    include:
+      ~w(autocomplete cols disabled form list max maxlength min minlength
+                pattern placeholder readonly required rows size step x-bind:style)
 
   slot :inner_block
 
@@ -267,14 +312,18 @@ defmodule HeimdallWeb.CoreComponents do
     assigns
     |> assign(field: nil, id: assigns.id || field.id)
     |> assign(:errors, Enum.map(field.errors, &translate_error(&1)))
-    |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
+    |> assign_new(:name, fn ->
+      if assigns.multiple, do: field.name <> "[]", else: field.name
+    end)
     |> assign_new(:value, fn -> field.value end)
     |> input()
   end
 
   def input(%{type: "checkbox", value: value} = assigns) do
     assigns =
-      assign_new(assigns, :checked, fn -> Form.normalize_value("checkbox", value) end)
+      assign_new(assigns, :checked, fn ->
+        Form.normalize_value("checkbox", value)
+      end)
 
     ~H"""
     <div phx-feedback-for={@name}>
@@ -397,7 +446,10 @@ defmodule HeimdallWeb.CoreComponents do
 
   def header(assigns) do
     ~H"""
-    <header class={[@actions != [] && "flex items-center justify-between gap-6", @class]}>
+    <header class={[
+      @actions != [] && "flex items-center justify-between gap-6",
+      @class
+    ]}>
       <div>
         <h1 class="text-lg font-semibold leading-8 text-zinc-800">
           <%= render_slot(@inner_block) %>
@@ -423,18 +475,26 @@ defmodule HeimdallWeb.CoreComponents do
   """
   attr :id, :string, required: true
   attr :rows, :list, required: true
-  attr :row_id, :any, default: nil, doc: "the function for generating the row id"
-  attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
+
+  attr :row_id, :any,
+    default: nil,
+    doc: "the function for generating the row id"
+
+  attr :row_click, :any,
+    default: nil,
+    doc: "the function for handling phx-click on each row"
 
   attr :row_item, :any,
     default: &Function.identity/1,
-    doc: "the function for mapping each row before calling the :col and :action slots"
+    doc:
+      "the function for mapping each row before calling the :col and :action slots"
 
   slot :col, required: true do
     attr :label, :string
   end
 
-  slot :action, doc: "the slot for showing user actions in the last table column"
+  slot :action,
+    doc: "the slot for showing user actions in the last table column"
 
   def table(assigns) do
     assigns =
@@ -447,8 +507,12 @@ defmodule HeimdallWeb.CoreComponents do
       <table class="w-[40rem] mt-11 sm:w-full">
         <thead class="text-sm text-left leading-6 text-zinc-500">
           <tr>
-            <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal"><%= col[:label] %></th>
-            <th class="relative p-0 pb-4"><span class="sr-only"><%= gettext("Actions") %></span></th>
+            <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal">
+              <%= col[:label] %>
+            </th>
+            <th class="relative p-0 pb-4">
+              <span class="sr-only"><%= gettext("Actions") %></span>
+            </th>
           </tr>
         </thead>
         <tbody
@@ -456,7 +520,11 @@ defmodule HeimdallWeb.CoreComponents do
           phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
           class="relative divide-y divide-zinc-100 border-t border-zinc-200 text-sm leading-6 text-zinc-700"
         >
-          <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
+          <tr
+            :for={row <- @rows}
+            id={@row_id && @row_id.(row)}
+            class="group hover:bg-zinc-50"
+          >
             <td
               :for={{col, i} <- Enum.with_index(@col)}
               phx-click={@row_click && @row_click.(row)}
@@ -593,7 +661,9 @@ defmodule HeimdallWeb.CoreComponents do
     |> JS.show(to: "##{id}")
     |> JS.show(
       to: "##{id}-bg",
-      transition: {"transition-all transform ease-out duration-300", "opacity-0", "opacity-100"}
+      transition:
+        {"transition-all transform ease-out duration-300", "opacity-0",
+         "opacity-100"}
     )
     |> show("##{id}-container")
     |> JS.add_class("overflow-hidden", to: "body")
@@ -604,7 +674,9 @@ defmodule HeimdallWeb.CoreComponents do
     js
     |> JS.hide(
       to: "##{id}-bg",
-      transition: {"transition-all transform ease-in duration-200", "opacity-100", "opacity-0"}
+      transition:
+        {"transition-all transform ease-in duration-200", "opacity-100",
+         "opacity-0"}
     )
     |> hide("##{id}-container")
     |> JS.hide(to: "##{id}", transition: {"block", "block", "hidden"})

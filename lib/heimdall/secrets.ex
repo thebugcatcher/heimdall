@@ -10,12 +10,30 @@ defmodule Heimdall.Secrets do
   alias Heimdall.EncryptionAlgo.RSA
   alias Heimdall.Repo
 
+  @doc """
+  Returns a new changeset (with no errors) that can be used in frontend forms
+  """
+  @spec new :: Changeset.t()
+  def new do
+    %{}
+    |> Secret.changeset()
+    |> Map.put(:errors, [])
+  end
+
+  @doc """
+  Encrypts and inserts secret in the store
+  """
   @spec encrypt_and_create(map()) :: {:ok, Secret.t()} | {:error, term()}
   def encrypt_and_create(params) do
     params
     |> Secret.changeset()
     |> maybe_encrypt_text()
     |> Repo.insert()
+  end
+
+  @spec get(Ecto.UUID.t()) :: Secret.t() | nil
+  def get(secret_id) do
+    Repo.get(Secret, secret_id)
   end
 
   defp maybe_encrypt_text(%Changeset{valid?: false} = changeset), do: changeset

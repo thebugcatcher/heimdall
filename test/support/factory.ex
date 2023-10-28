@@ -1,6 +1,8 @@
 defmodule Heimdall.Factory do
   @moduledoc false
 
+  alias Heimdall.Secrets
+
   alias Timex.Duration
 
   def valid_secret_params(params \\ %{}) do
@@ -14,5 +16,11 @@ defmodule Heimdall.Factory do
       },
       params
     )
+  end
+
+  def encrypt_and_create(params \\ %{}) do
+    params
+    |> valid_secret_params
+    |> Secrets.encrypt_and_create()
   end
 end

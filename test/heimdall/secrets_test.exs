@@ -6,6 +6,16 @@ defmodule Heimdall.SecretsTest do
 
   @public_key_pem File.read!("./test/support/keys/example-public-key.pem")
 
+  describe "new/0" do
+    test "returns an empty changeset with no errors" do
+      changeset = Secrets.new()
+
+      refute changeset.valid?
+
+      assert changeset.errors == []
+    end
+  end
+
   describe "encrypt_and_create/1" do
     test "successfully encrypts and inserts a secret (for aes_gcm)" do
       raw = "supersecretpassword"

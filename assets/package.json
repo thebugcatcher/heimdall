@@ -1,0 +1,19 @@
+{
+  "name": "heimdall",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier -w . ../priv/**/*.html",
+    "check_formatted": "prettier -c . ../priv/**/*.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "alpinejs": "^3.11.1"
+  },
+  "devDependencies": {
+    "prettier": "2.8.4"
+  }
+}
