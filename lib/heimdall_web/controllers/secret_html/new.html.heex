@@ -3,164 +3,217 @@
     Create a New Secret
   </div>
 
-  <.form for={@changeset} action={~p"/secrets"}>
-    <div x-data="{ show: false }">
-      <div class="grid grid-cols-4">
-        <div class="mt-0.5">
-          <.label for="encrypted_text">
-            <span class="text-lg">
-              Secret
-            </span>
-          </.label>
+  <div x-data="{selectedAlgo: 'aes_gcm'}">
+    <.form for={@changeset} action={~p"/secrets"}>
+      <div x-data="{ show: false }">
+        <div class="grid grid-cols-4">
+          <div class="mt-0.5">
+            <.label for="encrypted_text">
+              <span class="text-lg">
+                Secret
+              </span>
+            </.label>
+          </div>
+
+          <div
+            class="col-start-6 text-right rounded rounded-xl text-blue-800 hover:text-blue-400 cursor-pointer"
+            x-show="!show"
+            @click="show = true"
+          >
+            <.icon name="hero-eye" class="h-5 w-5" />
+          </div>
+
+          <div
+            class="col-start-6 text-right rounded rounded-xl text-blue-800 hover:text-blue-400 cursor-pointer"
+            x-show="show"
+            @click="show = false"
+          >
+            <.icon name="hero-eye-slash" class="h-5 w-5" />
+          </div>
         </div>
 
-        <div
-          class="col-start-6 text-right rounded rounded-xl text-blue-800 hover:text-blue-400 cursor-pointer"
-          x-show="!show"
-          @click="show = true"
-        >
-          <.icon name="hero-eye" class="h-5 w-5" />
-        </div>
-
-        <div
-          class="col-start-6 text-right rounded rounded-xl text-blue-800 hover:text-blue-400 cursor-pointer"
-          x-show="show"
-          @click="show = false"
-        >
-          <.icon name="hero-eye-slash" class="h-5 w-5" />
-        </div>
+        <.input
+          type="textarea"
+          autocomplete="off"
+          name="secret[encrypted_text]"
+          id="secret_encrypted_text"
+          spellcheck="false"
+          value={@changeset.changes[:encrypted_text]}
+          x-bind:style="!show && 'color: transparent;text-shadow: 0 0 8px rgba(0,0,0,0.5);'"
+        />
       </div>
 
+      <% filtered_errors =
+        @changeset.errors
+        |> Enum.filter(&(elem(&1, 0) == :encrypted_text))
+        |> Enum.map(fn {_field, {msg, _}} -> msg end) %>
+
+      <.error :for={msg <- filtered_errors}><%= msg %></.error>
+
+      <br />
+
+      <hr />
+
+      <br />
+
+      <.label for="title">Title</.label>
       <.input
-        type="textarea"
-        autocomplete="off"
-        name="secret[encrypted_text]"
-        id="secret_encrypted_text"
-        spellcheck="false"
-        value={@changeset.changes[:encrypted_text]}
-        x-bind:style="!show && 'color: transparent;text-shadow: 0 0 8px rgba(0,0,0,0.5);'"
+        name="secret[title]"
+        id="secret_title"
+        placeholder="Short description"
+        value={@changeset.changes[:title]}
       />
-    </div>
 
-    <% filtered_errors =
-      @changeset.errors
-      |> Enum.filter(&(elem(&1, 0) == :encrypted_text))
-      |> Enum.map(fn {_field, {msg, _}} -> msg end) %>
+      <% filtered_errors =
+        @changeset.errors
+        |> Enum.filter(&(elem(&1, 0) == :title))
+        |> Enum.map(fn {_field, {msg, _}} -> msg end) %>
 
-    <.error :for={msg <- filtered_errors}><%= msg %></.error>
+      <.error :for={msg <- filtered_errors}><%= msg %></.error>
 
-    <br />
+      <br />
 
-    <hr />
+      <.label for="encryption_algo">Encryption Algorithm</.label>
 
-    <br />
+      <select
+        id="secret_encryption_algo"
+        name="secret[encryption_algo]"
+        value={@changeset.changes[:encryption_algo]}
+        class="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm dark:bg-zinc-600"
+        x-model="selectedAlgo"
+      >
+        <%= for encryption_algo <- Secret.encryption_algos() do %>
+          <option
+            id={ "secret_encryption_algo_#{encryption_algo}" }
+            value={encryption_algo}
+          >
+            <%= humanize_encryption_algo(encryption_algo) %>
+          </option>
+        <% end %>
+      </select>
 
-    <.label for="title">Title</.label>
-    <.input
-      name="secret[title]"
-      id="secret_title"
-      placeholder="Short description"
-      value={@changeset.changes[:title]}
-    />
+      <% filtered_errors =
+        @changeset.errors
+        |> Enum.filter(&(elem(&1, 0) == :encryption_algo))
+        |> Enum.map(fn {_field, {msg, _}} -> msg end) %>
 
-    <% filtered_errors =
-      @changeset.errors
-      |> Enum.filter(&(elem(&1, 0) == :title))
-      |> Enum.map(fn {_field, {msg, _}} -> msg end) %>
+      <.error :for={msg <- filtered_errors}><%= msg %></.error>
 
-    <.error :for={msg <- filtered_errors}><%= msg %></.error>
+      <br />
 
-    <br />
+      <template x-if="selectedAlgo == 'aes_gcm'">
+        <div x-data="{ show: false }">
+          <div class="grid grid-cols-4">
+            <div class="mt-0.5">
+              <.label for="encryption_key">Password</.label>
+            </div>
 
-    <.label for="encryption_algo">Encryption Algorithm</.label>
+            <div
+              class="col-start-6 text-right rounded rounded-xl text-blue-800 hover:text-blue-400 cursor-pointer"
+              x-show="!show"
+              @click="show = true"
+            >
+              <.icon name="hero-eye" class="h-5 w-5" />
+            </div>
 
-    <select
-      id="secret_encryption_algo"
-      name="secret[encryption_algo]"
-      value={@changeset.changes[:encryption_algo]}
-      class="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm dark:bg-zinc-600"
-      x-model="selectedService"
-    >
-      <%= for encryption_algo <- Secret.encryption_algos() do %>
-        <option
-          id={ "secret_encryption_algo_#{encryption_algo}" }
-          value={encryption_algo}
-        >
-          <%= humanize_encryption_algo(encryption_algo) %>
-        </option>
-      <% end %>
-    </select>
+            <div
+              class="col-start-6 text-right rounded rounded-xl text-blue-800 hover:text-blue-400 cursor-pointer"
+              x-show="show"
+              @click="show = false"
+            >
+              <.icon name="hero-eye-slash" class="h-5 w-5" />
+            </div>
+          </div>
 
-    <% filtered_errors =
-      @changeset.errors
-      |> Enum.filter(&(elem(&1, 0) == :encryption_algo))
-      |> Enum.map(fn {_field, {msg, _}} -> msg end) %>
+          <.input
+            autocomplete="off"
+            name="secret[encryption_key]"
+            id="secret_encryption_key"
+            spellcheck="false"
+            value={@changeset.changes[:encryption_key]}
+            x-bind:style="!show && 'color: transparent;text-shadow: 0 0 8px rgba(0,0,0,0.5);'"
+          />
 
-    <.error :for={msg <- filtered_errors}><%= msg %></.error>
+          <br />
+        </div>
+      </template>
 
-    <br />
+      <template x-if="selectedAlgo == 'rsa'">
+        <div x-data="{ show: false }">
+          <div class="grid grid-cols-4">
+            <div class="mt-0.5">
+              <.label for="encryption_key">RSA Public Key</.label>
+            </div>
 
-    <div x-data="{ show: false }">
-      <div class="grid grid-cols-4">
-        <div class="mt-0.5">
-          <.label for="encryption_key">Encryption Key</.label>
+            <div
+              class="col-start-6 text-right rounded rounded-xl text-blue-800 hover:text-blue-400 cursor-pointer"
+              x-show="!show"
+              @click="show = true"
+            >
+              <.icon name="hero-eye" class="h-5 w-5" />
+            </div>
+
+            <div
+              class="col-start-6 text-right rounded rounded-xl text-blue-800 hover:text-blue-400 cursor-pointer"
+              x-show="show"
+              @click="show = false"
+            >
+              <.icon name="hero-eye-slash" class="h-5 w-5" />
+            </div>
+          </div>
+
+          <.input
+            type="textarea"
+            autocomplete="off"
+            name="secret[encryption_key]"
+            id="secret_encryption_key"
+            spellcheck="false"
+            value={@changeset.changes[:encryption_key]}
+            x-bind:style="!show && 'color: transparent;text-shadow: 0 0 8px rgba(0,0,0,0.5);'"
+          />
+
+          <br />
+        </div>
+      </template>
+
+      <template x-if="selectedAlgo == 'plaintext'">
+        <div class="hidden">
+          <.input
+            name="secret[encryption_key]"
+            id="secret_encryption_key"
+            value="plaintext"
+          />
         </div>
 
-        <div
-          class="col-start-6 text-right rounded rounded-xl text-blue-800 hover:text-blue-400 cursor-pointer"
-          x-show="!show"
-          @click="show = true"
-        >
-          <.icon name="hero-eye" class="h-5 w-5" />
-        </div>
+        <br />
+      </template>
 
-        <div
-          class="col-start-6 text-right rounded rounded-xl text-blue-800 hover:text-blue-400 cursor-pointer"
-          x-show="show"
-          @click="show = false"
-        >
-          <.icon name="hero-eye-slash" class="h-5 w-5" />
-        </div>
-      </div>
+      <.label for="expires_at">Expires in</.label>
 
-      <.input
-        type="textarea"
-        autocomplete="off"
-        name="secret[encryption_key]"
-        id="secret_encryption_key"
-        spellcheck="false"
-        value={@changeset.changes[:encryption_key]}
-        x-bind:style="!show && 'color: transparent;text-shadow: 0 0 8px rgba(0,0,0,0.5);'"
-      />
-    </div>
+      <select
+        id="secret_expires_at"
+        name="secret[expires_at]"
+        value={@changeset.changes[:expires_at]}
+        class="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm dark:bg-zinc-600"
+        x-model="selectedService"
+      >
+        <%= for {label, expires_at} <- expiration_options() do %>
+          <option id={ "secret_expires_at_#{expires_at}" } value={expires_at}>
+            <%= label %>
+          </option>
+        <% end %>
+      </select>
 
-    <br />
+      <% filtered_errors =
+        @changeset.errors
+        |> Enum.filter(&(elem(&1, 0) == :expires_at))
+        |> Enum.map(fn {_field, {msg, _}} -> msg end) %>
 
-    <.label for="expires_at">Expires in</.label>
+      <.error :for={msg <- filtered_errors}><%= msg %></.error>
 
-    <select
-      id="secret_expires_at"
-      name="secret[expires_at]"
-      value={@changeset.changes[:expires_at]}
-      class="mt-1 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm dark:bg-zinc-600"
-      x-model="selectedService"
-    >
-      <%= for {label, expires_at} <- expiration_options() do %>
-        <option id={ "secret_expires_at_#{expires_at}" } value={expires_at}>
-          <%= label %>
-        </option>
-      <% end %>
-    </select>
+      <br /><br />
 
-    <% filtered_errors =
-      @changeset.errors
-      |> Enum.filter(&(elem(&1, 0) == :expires_at))
-      |> Enum.map(fn {_field, {msg, _}} -> msg end) %>
-
-    <.error :for={msg <- filtered_errors}><%= msg %></.error>
-
-    <br /><br />
-
-    <.button>Create</.button>
-  </.form>
+      <.button>Create</.button>
+    </.form>
+  </div>
 </div>
