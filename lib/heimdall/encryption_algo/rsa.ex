@@ -10,10 +10,9 @@ defmodule Heimdall.EncryptionAlgo.RSA do
   """
   @impl true
   def encrypt(raw, public_key_pem) do
-    :public_key.encrypt_public(
-      raw,
-      key_from_pem(public_key_pem)
-    )
+    raw
+    |> :public_key.encrypt_public(key_from_pem(public_key_pem))
+    |> Base.encode16()
   end
 
   @doc """
@@ -21,10 +20,9 @@ defmodule Heimdall.EncryptionAlgo.RSA do
   """
   @impl true
   def decrypt(encrypted, private_key_pem) do
-    :public_key.decrypt_private(
-      encrypted,
-      key_from_pem(private_key_pem)
-    )
+    encrypted
+    |> Base.decode16!()
+    |> :public_key.decrypt_private(key_from_pem(private_key_pem))
   end
 
   defp key_from_pem(pem) do
