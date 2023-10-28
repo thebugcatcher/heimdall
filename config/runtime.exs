@@ -39,3 +39,9 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 end
+
+config :heimdall, Heimdall.SecretsPruner,
+  time_interval_ms:
+    String.to_integer(System.get_env("SECRETS_PRUNER_INTERVAL_MS", "30000")),
+  delete_query_timeout:
+    String.to_integer(System.get_env("DELETE_QUERY_TIMEOUT_MS", "1500"))
