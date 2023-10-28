@@ -1,4 +1,6 @@
 defmodule Heimdall.Factory do
+  @moduledoc false
+
   alias Timex.Duration
 
   def valid_secret_params(params \\ %{}) do
