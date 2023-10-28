@@ -1,0 +1,12 @@
+version: '3'
+services:
+  db:
+    image: postgis/postgis:13-3.3-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../tmp/postgresql:/var/lib/postgresql/data
+
