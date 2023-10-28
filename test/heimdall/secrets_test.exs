@@ -85,7 +85,7 @@ defmodule Heimdall.SecretsTest do
 
   describe "get/1" do
     test "returns secret with given id" do
-      secret = Factory.encrypt_and_create()
+      {:ok, secret} = Factory.encrypt_and_create()
 
       returned_val = Secrets.get(secret.id)
 
