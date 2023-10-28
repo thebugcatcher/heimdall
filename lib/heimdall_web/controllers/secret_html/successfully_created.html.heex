@@ -1,27 +1,30 @@
-<div class="text-center">
-  Secret "<strong><%= @secret.title %></strong>" successfully created <% url =
-    url(~p"/secrets/#{@secret.id}") %>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
 
-  <div x-data="{urlCopied: false}" style="display: inline">
-    <div x-show="!urlCopied">
-      <span
-        class="cursor-pointer"
-        @click={ "urlCopied = true; copyToClipboard('#{url}')" }
-      >
-        Copy link <.icon name="hero-document-duplicate-solid" class="h-5 w-5" />
-      </span>
+<div class="text-center">
+  Secret "<strong><%= @secret.title %></strong>" successfully created
+
+  <div class="mt-2 grid grid-cols-10">
+    <div class="col-span-9">
+      <.input name="urlToCopy" id="urlToCopy" value={ url(~p"/secrets/#{@secret.id}") } readonly />
     </div>
-    <div x-show="urlCopied">
-      <span class="text-gray-500">
-        <.icon name="hero-check" class="h-5 w-5" /> Link Copied
+
+    <div class="mt-4">
+      <span
+        class="cursor-pointer clipit"
+        data-clipboard-target="#urlToCopy"
+      >
+        <.icon name="hero-document-duplicate-solid" class="h-5 w-5" />
       </span>
     </div>
   </div>
 </div>
 
 <script>
-  var copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text)
-    alert("URL copied to clipboard")
-  }
+  var clipboard = new ClipboardJS('.clipit');
+
+  clipboard.on('success', function (e) {
+    alert("Copied to clipboard");
+    e.clearSelection();
+  });
+
 </script>
