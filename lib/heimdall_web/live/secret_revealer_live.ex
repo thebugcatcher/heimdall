@@ -10,7 +10,6 @@ defmodule HeimdallWeb.SecretRevealerLive do
       socket
       |> assign(:secret, secret)
       |> assign(:decrypted_text, nil)
-      |> assign(:decryption_error, nil)
 
     {
       :ok,
@@ -27,7 +26,6 @@ defmodule HeimdallWeb.SecretRevealerLive do
           socket
           |> put_flash(:info, "Successfully decrypted")
           |> assign(:decrypted_text, decrypted_text)
-          |> assign(:decryption_error, nil)
 
         {:noreply, socket}
 
@@ -36,7 +34,6 @@ defmodule HeimdallWeb.SecretRevealerLive do
           socket
           |> put_flash(:error, "Error in decryption")
           |> assign(:decrypted_text, nil)
-          |> assign(:decryption_error, error)
 
         {:noreply, socket}
     end

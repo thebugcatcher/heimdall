@@ -3,22 +3,29 @@
 >
 </script>
 
-<div class="text-center">
-  Secret "<strong><%= @secret.title %></strong>" successfully created
-  <div class="mt-2 grid grid-cols-10">
-    <div class="col-span-9">
-      <.input
-        name="urlToCopy"
-        id="urlToCopy"
-        value={url(~p"/secrets/#{@secret.id}")}
-        readonly
-      />
-    </div>
+<div class="border rounded-xl px-6 py-8">
+  <div class="text-center text-xl mb-4">
+    Secret "<i><%= @secret.title %></i>" successfully created
+  </div>
 
-    <div class="mt-4">
-      <span class="cursor-pointer clipit" data-clipboard-target="#urlToCopy">
-        <.icon name="hero-document-duplicate-solid" class="h-5 w-5" />
-      </span>
+  <div class="text-center">
+    <div class="mt-2 grid grid-cols-10">
+      <div class="col-span-8">
+        <.input
+          name="urlToCopy"
+          id="urlToCopy"
+          style="border: transparent"
+          value={url(~p"/secrets/#{@secret.id}")}
+          readonly
+        />
+      </div>
+
+      <div class="mt-4 col-span-2">
+        <span class="cursor-pointer clipit" data-clipboard-target="#urlToCopy">
+          Copy to clipboard
+          <.icon name="hero-document-duplicate-solid" class="h-5 w-5" />
+        </span>
+      </div>
     </div>
   </div>
 </div>
