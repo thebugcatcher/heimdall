@@ -31,9 +31,30 @@ defmodule Heimdall.Secrets do
     |> Repo.insert()
   end
 
+  @doc """
+  TODO
+  """
   @spec get(Ecto.UUID.t()) :: Secret.t() | nil
   def get(secret_id) do
     Repo.get(Secret, secret_id)
+  end
+
+  @doc """
+  TODO
+  """
+  @spec decrypt(Secret.t(), String.t()) :: {:ok, String.t()} | {:error, term()}
+  def decrypt(secret, decryption_key) do
+    algo = secret.encryption_algo
+    encrypted = secret.encrypted_text
+
+    try do
+      case decrypted_text(algo, encrypted, decryption_key) do
+        :error -> {:error, "Error in decryption"}
+        text -> {:ok, text}
+      end
+    rescue
+      _e -> {:error, "Error in decryption"}
+    end
   end
 
   defp maybe_encrypt_text(%Changeset{valid?: false} = changeset), do: changeset
@@ -55,4 +76,10 @@ defmodule Heimdall.Secrets do
   defp encrypted_text(:aes_gcm, raw, key), do: AesGcm.encrypt(raw, key)
 
   defp encrypted_text(:rsa, raw, key), do: RSA.encrypt(raw, key)
+
+  defp decrypted_text(:plaintext, enc, key), do: Plaintext.decrypt(enc, key)
+
+  defp decrypted_text(:aes_gcm, enc, key), do: AesGcm.decrypt(enc, key)
+
+  defp decrypted_text(:rsa, enc, key), do: RSA.decrypt(enc, key)
 end
