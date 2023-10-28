@@ -1,3 +1,27 @@
-Successfully created
+<div class="text-center">
+  Secret "<strong><%= @secret.title %></strong>" successfully created <% url =
+    url(~p"/secrets/#{@secret.id}") %>
 
-Link: <%= url(~p"/secrets/#{@secret_id}") %>
+  <div x-data="{urlCopied: false}" style="display: inline">
+    <div x-show="!urlCopied">
+      <span
+        class="cursor-pointer"
+        @click={ "urlCopied = true; copyToClipboard('#{url}')" }
+      >
+        Copy link <.icon name="hero-document-duplicate-solid" class="h-5 w-5" />
+      </span>
+    </div>
+    <div x-show="urlCopied">
+      <span class="text-gray-500">
+        <.icon name="hero-check" class="h-5 w-5" /> Link Copied
+      </span>
+    </div>
+  </div>
+</div>
+
+<script>
+  var copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text)
+    alert("URL copied to clipboard")
+  }
+</script>

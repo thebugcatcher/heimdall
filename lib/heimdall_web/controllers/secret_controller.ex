@@ -21,7 +21,13 @@ defmodule HeimdallWeb.SecretController do
   end
 
   def successfully_created(conn, %{"secret_id" => secret_id}) do
-    render(conn, :successfully_created, secret_id: secret_id)
+    case Secrets.get(secret_id) do
+      nil ->
+        text(conn, "Not Found")
+
+      secret ->
+        render(conn, :successfully_created, secret: secret)
+    end
   end
 
   def show(conn, %{"secret_id" => secret_id}) do

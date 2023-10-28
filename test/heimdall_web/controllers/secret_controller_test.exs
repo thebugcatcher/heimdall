@@ -32,11 +32,19 @@ defmodule HeimdallWeb.SecretControllerTest do
 
   describe "successfully_created/2 (GET /successfully_created)" do
     test "renders a page with the link to given secret", %{conn: conn} do
+      {:ok, secret} = Factory.encrypt_and_create()
+
+      conn = get(conn, ~p"/successfully_created?secret_id=#{secret.id}")
+
+      assert html_response(conn, 200) =~ url(~p"/secrets/#{secret.id}")
+    end
+
+    test "renders 404 when secret with id doesn't exist", %{conn: conn} do
       secret_id = Ecto.UUID.generate()
 
       conn = get(conn, ~p"/successfully_created?secret_id=#{secret_id}")
 
-      assert html_response(conn, 200) =~ url(~p"/secrets/#{secret_id}")
+      assert text_response(conn, 200) =~ "Not Found"
     end
   end
 
