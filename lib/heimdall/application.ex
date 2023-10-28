@@ -8,6 +8,7 @@ defmodule Heimdall.Application do
     children = [
       HeimdallWeb.Telemetry,
       Heimdall.Repo,
+      Heimdall.SecretsPruner,
       {Phoenix.PubSub, name: Heimdall.PubSub},
       {Finch, name: Heimdall.Finch},
       HeimdallWeb.Endpoint

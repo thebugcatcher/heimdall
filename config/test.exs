@@ -24,3 +24,6 @@ config :logger, level: :warning
 config :phoenix, :plug_init_mode, :runtime
 
 config :heimdall, dev_routes: true
+
+# In order for scheduled prunes to not affect tests
+config :heimdall, Heimdall.SecretsPruner, time_interval_ms: 1_000_000
