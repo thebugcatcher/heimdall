@@ -110,8 +110,6 @@ jobs:
         restore-keys: ${{ runner.os }}-build-
     - name: Install dependencies
       run: mix deps.get
-    - name: Install NPM dependencies
-      run: cd assets && npm install
     - name: Check Formatted
       run: mix format --check-formatted
 
