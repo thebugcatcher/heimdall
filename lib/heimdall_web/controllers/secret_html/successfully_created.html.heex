@@ -1,18 +1,22 @@
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"
+>
+</script>
 
 <div class="text-center">
   Secret "<strong><%= @secret.title %></strong>" successfully created
-
   <div class="mt-2 grid grid-cols-10">
     <div class="col-span-9">
-      <.input name="urlToCopy" id="urlToCopy" value={ url(~p"/secrets/#{@secret.id}") } readonly />
+      <.input
+        name="urlToCopy"
+        id="urlToCopy"
+        value={url(~p"/secrets/#{@secret.id}")}
+        readonly
+      />
     </div>
 
     <div class="mt-4">
-      <span
-        class="cursor-pointer clipit"
-        data-clipboard-target="#urlToCopy"
-      >
+      <span class="cursor-pointer clipit" data-clipboard-target="#urlToCopy">
         <.icon name="hero-document-duplicate-solid" class="h-5 w-5" />
       </span>
     </div>
@@ -26,5 +30,4 @@
     alert("Copied to clipboard");
     e.clearSelection();
   });
-
 </script>

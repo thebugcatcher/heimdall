@@ -5,14 +5,18 @@ defmodule Heimdall.Application do
 
   @impl true
   def start(_type, _args) do
-    children = Enum.reject([
-      HeimdallWeb.Telemetry,
-      Heimdall.Repo,
-      maybe_start_pruner(),
-      {Phoenix.PubSub, name: Heimdall.PubSub},
-      {Finch, name: Heimdall.Finch},
-      HeimdallWeb.Endpoint
-    ], &is_nil/1)
+    children =
+      Enum.reject(
+        [
+          HeimdallWeb.Telemetry,
+          Heimdall.Repo,
+          maybe_start_pruner(),
+          {Phoenix.PubSub, name: Heimdall.PubSub},
+          {Finch, name: Heimdall.Finch},
+          HeimdallWeb.Endpoint
+        ],
+        &is_nil/1
+      )
 
     opts = [strategy: :one_for_one, name: Heimdall.Supervisor]
     Supervisor.start_link(children, opts)

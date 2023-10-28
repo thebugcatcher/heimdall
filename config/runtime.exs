@@ -40,7 +40,6 @@ if config_env() == :prod do
     secret_key_base: secret_key_base
 end
 
-
 if config_env() != :test do
   config :heimdall, Heimdall.SecretsPruner,
     enabled: System.get_env("PRUNE_OLD_SECRETS", "true") == "true",
