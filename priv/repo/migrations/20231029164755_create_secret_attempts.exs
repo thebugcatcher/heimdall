@@ -5,7 +5,7 @@ defmodule Heimdall.Repo.Migrations.CreateSecretAttempts do
     create table(:attempts, primary_key: false) do
       add(:id, :uuid, primary_key: true)
 
-      add(:secret_id, references(:secrets, type: :uuid))
+      add(:secret_id, references(:secrets, type: :uuid, on_delete: :delete_all))
 
       add(:ip_address, :string)
       add(:attempted_at, :utc_datetime)

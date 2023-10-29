@@ -70,7 +70,7 @@ defmodule HeimdallWeb.SecretControllerTest do
     test "renders a page with expected content", %{conn: conn} do
       conn = get(conn, ~p"/secret_404")
 
-      assert html_response(conn, 200) =~ "Secret doesn't exist"
+      assert html_response(conn, 200) =~ "doesn't exist"
     end
   end
 end

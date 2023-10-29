@@ -5,6 +5,8 @@ defmodule Heimdall.Secrets do
 
   alias Ecto.Changeset
   alias Heimdall.Data.Secret
+  alias Heimdall.Data.Secret.Attempt
+  alias Heimdall.Data.Secret.Read
   alias Heimdall.EncryptionAlgo.AesGcm
   alias Heimdall.EncryptionAlgo.Plaintext
   alias Heimdall.EncryptionAlgo.RSA
@@ -69,6 +71,44 @@ defmodule Heimdall.Secrets do
     |> Repo.one()
     |> is_nil()
     |> Kernel.not()
+  end
+
+  @doc """
+  Creates a Read record for a Secret
+  """
+  @spec create_secret_read(Secret.t(), String.t(), DateTime.t()) ::
+          {:ok, Read.t()} | {:error, term()}
+  def create_secret_read(secret, ip, read_at) do
+    %{
+      secret_id: secret.id,
+      ip_address: ip,
+      read_at: read_at
+    }
+    |> Read.changeset()
+    |> Repo.insert()
+  end
+
+  @doc """
+  Creates an Attempt record for a Secret
+  """
+  @spec create_secret_attempt(Secret.t(), String.t(), DateTime.t()) ::
+          {:ok, Attempt.t()} | {:error, term()}
+  def create_secret_attempt(secret, ip, attempted_at) do
+    %{
+      secret_id: secret.id,
+      ip_address: ip,
+      attempted_at: attempted_at
+    }
+    |> Attempt.changeset()
+    |> Repo.insert()
+  end
+
+  @doc """
+  Checks if an IP address is allowed to view a secret
+  """
+  @spec ip_allowed?(Secret.t(), String.t()) :: boolean()
+  def ip_allowed?(secret, ip) do
+    Regex.match?(~r"#{secret.ip_regex}", ip)
   end
 
   defp maybe_encrypt_text(%Changeset{valid?: false} = changeset), do: changeset

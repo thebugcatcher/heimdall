@@ -1,3 +1,6 @@
 <%= live_render(@conn, HeimdallWeb.SecretRevealerLive,
-  session: %{"secret_id" => @secret.id}
+  session: %{
+    "secret_id" => @secret.id,
+    "ip" => remote_ip_to_string(@conn.remote_ip)
+  }
 ) %>

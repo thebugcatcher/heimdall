@@ -29,7 +29,7 @@ defmodule Heimdall.Data.Secret do
     field(:expires_at, :utc_datetime)
     field(:max_reads, :integer)
     field(:max_decryption_attempts, :integer)
-    field(:ip_regex, :string, default: "*")
+    field(:ip_regex, :string, default: ".*")
 
     has_many(:attempts, __MODULE__.Attempt)
     has_many(:reads, __MODULE__.Read)

@@ -3,24 +3,60 @@ defmodule HeimdallWeb.SecretRevealerLive do
 
   alias Heimdall.Secrets
 
-  def mount(_params, %{"secret_id" => secret_id}, socket) do
+  def mount(_params, %{"secret_id" => secret_id, "ip" => ip}, socket) do
     secret = Heimdall.Secrets.get(secret_id)
 
     socket =
       socket
       |> assign(:secret, secret)
       |> assign(:decrypted_text, nil)
+      |> assign(:ip, ip)
 
-    schedule_expiration_check()
+    if secret_viewable?(secret, socket) do
+      schedule_expiration_check()
 
-    {
-      :ok,
-      assign(socket, :secret, secret)
-    }
+      {
+        :ok,
+        assign(socket, :secret, secret)
+      }
+    else
+      {
+        :noreply,
+        socket |> redirect(to: ~p"/secret_404")
+      }
+    end
   end
 
   def handle_event("decrypt", %{"key" => key}, socket) do
     secret = socket.assigns[:secret]
+
+    if secret_viewable?(secret, socket) do
+      do_decrypt(secret, socket, key)
+    else
+      {
+        :noreply,
+        socket |> redirect(to: ~p"/secret_404")
+      }
+    end
+  end
+
+  def handle_info(:check_expiration, socket) do
+    secret = socket.assigns[:secret]
+
+    if secret_viewable?(secret, socket) do
+      schedule_expiration_check()
+
+      {:noreply, socket}
+    else
+      {
+        :noreply,
+        socket |> redirect(to: ~p"/secret_404")
+      }
+    end
+  end
+
+  defp do_decrypt(secret, socket, key) do
+    ip = socket.assigns[:ip]
 
     case Secrets.decrypt(secret, key) do
       {:ok, decrypted_text} ->
@@ -28,6 +64,8 @@ defmodule HeimdallWeb.SecretRevealerLive do
           socket
           |> put_flash(:info, "Successfully decrypted")
           |> assign(:decrypted_text, decrypted_text)
+
+        Secrets.create_secret_read(secret, ip, DateTime.utc_now())
 
         schedule_expiration_check()
 
@@ -39,23 +77,16 @@ defmodule HeimdallWeb.SecretRevealerLive do
           |> put_flash(:error, "Error in decryption:\n #{error}")
           |> assign(:decrypted_text, nil)
 
+        Secrets.create_secret_attempt(secret, ip, DateTime.utc_now())
+
         {:noreply, socket}
     end
   end
 
-  def handle_info(:check_expiration, socket) do
-    secret = socket.assigns[:secret]
+  defp secret_viewable?(secret, socket) do
+    ip = socket.assigns[:ip]
 
-    if Secrets.not_expired?(secret) do
-      schedule_expiration_check()
-
-      {:noreply, socket}
-    else
-      {
-        :noreply,
-        socket |> redirect(to: ~p"/secret_404")
-      }
-    end
+    Secrets.not_expired?(secret) and Secrets.ip_allowed?(secret, ip)
   end
 
   defp schedule_expiration_check do

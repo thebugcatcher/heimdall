@@ -31,4 +31,8 @@ defmodule HeimdallWeb.SecretHTML do
   defp humanize_encryption_algo(:rsa) do
     "RSA (public key to encrypt & private key to decrypt)"
   end
+
+  defp remote_ip_to_string({num1, num2, num3, num4}) do
+    "#{num1}.#{num2}.#{num3}.#{num4}"
+  end
 end

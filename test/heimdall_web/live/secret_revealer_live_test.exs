@@ -21,7 +21,7 @@ defmodule HeimdallWeb.SecretRevealerLiveTest do
         live_isolated(
           conn,
           SecretRevealerLive,
-          session: %{"secret_id" => secret.id}
+          session: %{"secret_id" => secret.id, "ip" => "ip"}
         )
 
       assert html =~ secret.title
@@ -43,7 +43,7 @@ defmodule HeimdallWeb.SecretRevealerLiveTest do
         live_isolated(
           conn,
           SecretRevealerLive,
-          session: %{"secret_id" => secret.id}
+          session: %{"secret_id" => secret.id, "ip" => "ip"}
         )
 
       # Secret isn't visible until form is submitted
@@ -69,7 +69,7 @@ defmodule HeimdallWeb.SecretRevealerLiveTest do
         live_isolated(
           conn,
           SecretRevealerLive,
-          session: %{"secret_id" => secret.id}
+          session: %{"secret_id" => secret.id, "ip" => "ip"}
         )
 
       # Secret isn't visible until form is submitted
@@ -103,7 +103,7 @@ defmodule HeimdallWeb.SecretRevealerLiveTest do
         live_isolated(
           conn,
           SecretRevealerLive,
-          session: %{"secret_id" => secret.id}
+          session: %{"secret_id" => secret.id, "ip" => "ip"}
         )
 
       html =
@@ -135,7 +135,7 @@ defmodule HeimdallWeb.SecretRevealerLiveTest do
         live_isolated(
           conn,
           SecretRevealerLive,
-          session: %{"secret_id" => secret.id}
+          session: %{"secret_id" => secret.id, "ip" => "ip"}
         )
 
       html =
@@ -169,7 +169,7 @@ defmodule HeimdallWeb.SecretRevealerLiveTest do
         live_isolated(
           conn,
           SecretRevealerLive,
-          session: %{"secret_id" => secret.id}
+          session: %{"secret_id" => secret.id, "ip" => "ip"}
         )
 
       html =
