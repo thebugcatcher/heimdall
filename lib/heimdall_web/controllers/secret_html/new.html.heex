@@ -5,14 +5,27 @@
 
   <div x-data="{selectedAlgo: 'aes_gcm'}">
     <.form for={@changeset} action={~p"/secrets"}>
-      <div x-data="{ show: false }">
-        <div class="grid grid-cols-4">
-          <div class="mt-0.5">
+      <div x-data="{ show: false, showInfo: false }">
+        <div class="grid grid-cols-6">
+          <div class="-mt-0.5">
             <.label for="encrypted_text">
-              <span class="text-lg">
-                Secret
+              Secret
+              <span
+                class="text-blue-800 hover:text-blue-400 cursor-pointer"
+                @mouseover="showInfo = true"
+                @mouseleave="showInfo = false"
+              >
+                <.icon name="hero-information-circle" class="h-5 w-5" />
               </span>
             </.label>
+          </div>
+
+          <div
+            x-show="showInfo"
+            class="-mt-8 px-4 py-2 text-white bg-black absolute text-xs bg-opacity-80"
+          >
+            This is where you'll enter your sensitive information you want
+            to share. Passwords, Member IDs etc
           </div>
 
           <div
@@ -56,7 +69,30 @@
 
       <br />
 
-      <.label for="title">Title</.label>
+      <div x-data="{ showInfo: false }">
+        <div class="grid grid-cols-6">
+          <div class="mt-0.5">
+            <.label for="title">
+              Title
+              <span
+                class="text-blue-800 hover:text-blue-400 cursor-pointer"
+                @mouseover="showInfo = true"
+                @mouseleave="showInfo = false"
+              >
+                <.icon name="hero-information-circle" class="h-5 w-5" />
+              </span>
+            </.label>
+          </div>
+
+          <div
+            x-show="showInfo"
+            class="-mt-8 px-4 py-2 text-white bg-black absolute text-xs bg-opacity-80"
+          >
+            Enter a title so its easier to identity this secret
+          </div>
+        </div>
+      </div>
+
       <.input
         name="secret[title]"
         id="secret_title"
@@ -102,10 +138,26 @@
       <br />
 
       <template x-if="selectedAlgo == 'aes_gcm'">
-        <div x-data="{ show: false }">
-          <div class="grid grid-cols-4">
+        <div x-data="{ show: false, showInfo: false }">
+          <div class="grid grid-cols-6">
             <div class="mt-0.5">
-              <.label for="encryption_key">Password</.label>
+              <.label for="encryption_key">
+                Password
+                <span
+                  class="text-blue-800 hover:text-blue-400 cursor-pointer"
+                  @mouseover="showInfo = true"
+                  @mouseleave="showInfo = false"
+                >
+                  <.icon name="hero-information-circle" class="h-5 w-5" />
+                </span>
+              </.label>
+            </div>
+
+            <div
+              x-show="showInfo"
+              class="-mt-8 px-4 py-2 text-white bg-black absolute text-xs bg-opacity-80"
+            >
+              The receiver will require to know this password to view this secret
             </div>
 
             <div
@@ -139,10 +191,26 @@
       </template>
 
       <template x-if="selectedAlgo == 'rsa'">
-        <div x-data="{ show: false }">
+        <div x-data="{ show: false, showInfo: false }">
           <div class="grid grid-cols-4">
             <div class="mt-0.5">
-              <.label for="encryption_key">RSA Public Key PEM</.label>
+              <.label for="encryption_key">
+                RSA Public Key PEM
+                <span
+                  class="text-blue-800 hover:text-blue-400 cursor-pointer"
+                  @mouseover="showInfo = true"
+                  @mouseleave="showInfo = false"
+                >
+                  <.icon name="hero-information-circle" class="h-5 w-5" />
+                </span>
+              </.label>
+            </div>
+
+            <div
+              x-show="showInfo"
+              class="-mt-8 px-4 py-2 text-white bg-black absolute text-xs bg-opacity-80"
+            >
+              Use the receiver's RSA Public key to encrypt. They will need to use their private key to decrypt
             </div>
 
             <div
@@ -244,7 +312,42 @@
 
           <br />
 
-          <.label for="ip_regex">IP Regex</.label>
+          <div class="grid grid-cols-4" x-data="{showInfo: false}">
+            <div>
+              <.label for="ip_regex">
+                IP Regex
+                <span
+                  class="text-blue-800 hover:text-blue-400 cursor-pointer"
+                  @mouseover="showInfo = true"
+                  @mouseleave="showInfo = false"
+                >
+                  <.icon name="hero-information-circle" class="h-5 w-5" />
+                </span>
+              </.label>
+            </div>
+
+            <div
+              x-show="showInfo"
+              class="-mt-8 px-4 py-2 text-white bg-black absolute text-xs bg-opacity-80"
+            >
+              If the receiver's IP doesn't match this regex, they won't be able to view the secret. Matches all IPs by default
+            </div>
+
+            <div class="text-sm col-span-3">
+              <i>
+                Use
+                <a
+                  target="_blank"
+                  class="text-blue-600"
+                  href="https://regex101.com/"
+                >
+                  regex101.com
+                </a>
+                to make sure your regex works as expected
+              </i>
+            </div>
+          </div>
+
           <.input
             name="secret[ip_regex]"
             id="secret_ip_regex"
