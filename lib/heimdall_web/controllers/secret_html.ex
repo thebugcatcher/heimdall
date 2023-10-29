@@ -32,7 +32,7 @@ defmodule HeimdallWeb.SecretHTML do
     "RSA (public key to encrypt & private key to decrypt)"
   end
 
-  defp remote_ip_to_string({num1, num2, num3, num4}) do
-    "#{num1}.#{num2}.#{num3}.#{num4}"
+  defp remote_ip_to_string(remote_ip_tuple) do
+    remote_ip_tuple |> Tuple.to_list() |> Enum.join(".")
   end
 end
