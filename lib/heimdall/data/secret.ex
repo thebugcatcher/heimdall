@@ -29,9 +29,10 @@ defmodule Heimdall.Data.Secret do
     field(:expires_at, :utc_datetime)
     field(:max_reads, :integer)
     field(:max_decryption_attempts, :integer)
+    field(:ip_regex, :string, default: "*")
 
-    # embeds_many(:attempts, Heimdall.Secret.Attempt)
-    # embeds_many(:reads, Heimdall.Secret.Read)
+    has_many(:attempts, __MODULE__.Attempt)
+    has_many(:reads, __MODULE__.Read)
 
     timestamps()
   end
@@ -50,6 +51,7 @@ defmodule Heimdall.Data.Secret do
       expires_at
       max_reads
       max_decryption_attempts
+      ip_regex
     ]a)
     |> validate_required(~w[
       title

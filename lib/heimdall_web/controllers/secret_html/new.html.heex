@@ -211,6 +211,73 @@
 
       <.error :for={msg <- filtered_errors}><%= msg %></.error>
 
+      <br />
+      <hr />
+      <br />
+
+      <div x-data="{ showAdvancedOptions: false }">
+        <div x-show="!showAdvancedOptions">
+          <div
+            class="grid grid-cols-2 text-blue-800 hover:text-blue-500 cursor-pointer"
+            @click="showAdvancedOptions = true"
+          >
+            <div class="text-left">
+              Advanced Options
+            </div>
+            <div class="text-right">
+              <.icon name="hero-chevron-up" class="h-5 w-5" />
+            </div>
+          </div>
+        </div>
+        <div x-show="showAdvancedOptions">
+          <div
+            class="grid grid-cols-2 text-blue-800 hover:text-blue-500 cursor-pointer"
+            @click="showAdvancedOptions = false"
+          >
+            <div class="text-left">
+              Advanced Options
+            </div>
+            <div class="text-right">
+              <.icon name="hero-chevron-down" class="h-5 w-5" />
+            </div>
+          </div>
+
+          <br />
+
+          <.label for="ip_regex">IP Regex</.label>
+          <.input
+            name="secret[ip_regex]"
+            id="secret_ip_regex"
+            placeholder="Defaults to all IP addresses"
+            value={@changeset.changes[:ip_regex]}
+          />
+
+          <br />
+
+          <.label for="max_reads">Max Successful Reads</.label>
+          <.input
+            type="number"
+            min="1"
+            name="secret[max_reads]"
+            id="secret_max_reads"
+            placeholder="Defaults to unlimited reads"
+            value={@changeset.changes[:max_reads]}
+          />
+
+          <br />
+
+          <.label for="max_decryption_attempts">Max Failed Attempts</.label>
+          <.input
+            type="number"
+            min="1"
+            name="secret[max_decryption_attempts]"
+            id="secret_max_decryption_attempts"
+            placeholder="Defaults to unlimited attempts"
+            value={@changeset.changes[:max_decryption_attempts]}
+          />
+        </div>
+      </div>
+
       <br /><br />
 
       <.button>Create</.button>

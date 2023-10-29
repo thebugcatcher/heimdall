@@ -9,10 +9,9 @@ defmodule Heimdall.Repo.Migrations.CreateSecrets do
       add(:encrypted_text, :text)
       add(:encryption_algo, :string)
       add(:expires_at, :utc_datetime)
+      add(:ip_regex, :string)
       add(:max_reads, :integer)
       add(:max_decryption_attempts, :integer)
-      add(:attempts, {:array, :map}, default: [])
-      add(:reads, {:array, :map}, defaults: [])
 
       timestamps()
     end
