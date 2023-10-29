@@ -69,11 +69,43 @@ main features:
 
 ## Installation
 
-### Docker + Postgres (preferred)
+Keep the following things in mind:
 
-### Elixir + Postgres
+* Ability to run Elixir or built erlang release
+
+* Postgres DB server.
+    * __Make sure to set environment variable `DATABASE_URL`__ at runtime
+
+* Check out [Configurations](#configurations) section of this README.
+    * You might want to at least tweak `ADMIN_` related env vars
+    * Set up `PHX_HOST` and `PORT` env vars accordingly
+    * Would be ideal if you could generate a new secret listed in
+      `SECRET_KEY_BASE` part of that section
+
+### Elixir (ASDF) + Postgres (via Docker)
+
+If you have Elixir on your machine, simply pull the app locally and do the
+following:
+
+* `asdf install` to install `elixir`, `erlang` and `nodejs` versions.
+    * This should install what the app needs
+
+* Run `mix deps.get` to fetch the dependencies
+
+* Make sure `docker` is started and run `make start-infra`.
+    * This will start a new postgres container. Ignore if you already have
+      postgres running.
+      * Update `HEIMDALL_DB_USERNAME`, `HEIMDALL_DB_PASSWORD`, `HEIMDALL_DB_HOST`
+        and `HEIMDALL_DB_NAME` accordingly to if you're setting up your own
+        Postgres
+
+* Run using `mix phx.server` and enjoy!
 
 ### Deploy container to a Cloud Provider (example: Heroku)
+
+* This app comes up its `Dockerfile` ready for `Heroku`. Make sure to set up
+  environments as expected and deploy this to Heroku by following container
+  deployment instructions.
 
 ## Features
 
@@ -88,6 +120,7 @@ main features:
 * Ability to provide Max successful reads, after which the secret is effectively stale.
 * Ability to whitelist received IP addresses using IP Regex.
 * Auto deletion of expired secrets
+* Admin interface for ease of management (`/admin`) path
 
 
 ## Configurations
@@ -100,8 +133,13 @@ at container/application start-time.
 
 | env var name                            | description                                                                                        | default     |
 |:---------------------------------------:|:--------------------------------------------------------------------------------------------------:|:-----------:|
+|`DATABASE_URL`                           | URL for the Postgres DB to be used for the app                                                     | N/A         |
+|`SECRET_KEY_BASE`                        | Secret key used by Phoenix (use `mix phx.gen.secret` for a new one)                                | <somekey>   |
+|`PHX_HOST`                               | Host for phoenix's use (example: `heimdall.thebugcatcher.com`)                                     | empty       |
+|`PORT`                                   | HTTP Port for phoenix's use                                                                        | 4000        |
 |`ADMIN_USER`                             | Username for HTTP Basic auth for admin interface                                                   | admin       |
 |`ADMIN_PASSWORD`                         | Password for HTTP Basic auth for admin interface                                                   | admin       |
+|`ADMIN_SECRETS_SHOW_LIMIT`               | Upper limit of number of secrets to display in Admin interface                                     | 200         |
 |`PRUNE_OLD_SECRETS`                      | Deletes expired/stale (past max attempts) secrets                                                  | true        |
 |`SECRETS_PRUNER_INTERVAL_MS`             | Time interval in milliseconds between each prune if `PRUNE_OLD_SECRETS` is `true`                  | 30000       |
 |`DELETE_QUERY_TIMEOUT_MS`                | Maximum time in milliseconds each prune query should take if `PRUNE_OLD_SECRETS` is `true`         | 1500        |

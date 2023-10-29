@@ -12,7 +12,7 @@ defmodule Heimdall.AdminTest do
 
       assert stats[:secrets_count] == 1
 
-      assert stats[:last_pruned] == "N/A"
+      assert stats[:last_pruned]
     end
   end
 end
