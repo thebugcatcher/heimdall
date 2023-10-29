@@ -69,19 +69,24 @@ main features:
 
 ## Installation
 
-### Quick Setup for Demo/Testing (tested on Linux)
+### Quick Setup for Demo/Testing (tested on Linux and Mac)
+
+__Recommeded for judges__
 
 Pull the app and run with default config values:
 
 __NOTE: Make sure other already running containers don't interfere with system
 ports `5432` and `4000`__
 
-* `make demo`
+* Run `make demo`
     * This will start up docker containers needed to run the app
     * Includes `postgres` and `phoenix` containers
+    * This is the app and this container needs to keep running
 
-* `make setup`
+* Without stopping the one above, in a separate terminal session, run `make setup`
     * This will run the DB migrations needed and setup your app
+    * This command will probably give you an error at the end about starting
+      `Ranch` process but that's okay.
 
 * Refer to [Configurations](#configurations) sections for default values.
 
