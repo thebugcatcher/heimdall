@@ -100,6 +100,8 @@ at container/application start-time.
 
 | env var name                            | description                                                                                        | default     |
 |:---------------------------------------:|:--------------------------------------------------------------------------------------------------:|:-----------:|
+|`ADMIN_USER`                             | Username for HTTP Basic auth for admin interface                                                   | admin       |
+|`ADMIN_PASSWORD`                         | Password for HTTP Basic auth for admin interface                                                   | admin       |
 |`PRUNE_OLD_SECRETS`                      | Deletes expired/stale (past max attempts) secrets                                                  | true        |
 |`SECRETS_PRUNER_INTERVAL_MS`             | Time interval in milliseconds between each prune if `PRUNE_OLD_SECRETS` is `true`                  | 30000       |
 |`DELETE_QUERY_TIMEOUT_MS`                | Maximum time in milliseconds each prune query should take if `PRUNE_OLD_SECRETS` is `true`         | 1500        |

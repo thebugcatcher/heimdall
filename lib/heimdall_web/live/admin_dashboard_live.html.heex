@@ -1,0 +1,72 @@
+<div class="border rounded-xl px-6 py-8">
+  <div class="grid grid-cols-7 mb-4">
+    <div class="col-start-4 text-center text-xl">
+      Admin Dashboard
+    </div>
+
+    <div class="col-start-7 text-sm">
+      <.form for={%{}} phx-change="change_update_frequency">
+        <.label for="update_frequency">Dashboard Update Frequency</.label>
+
+        <select
+          name="update_frequency"
+          class="mt-1 block rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm dark:bg-zinc-600"
+        >
+          <%= for {label, val} <- update_frequencies() do %>
+            <option id={ "update_frequencies_#{val}" } value={val}>
+              <%= label %>
+            </option>
+          <% end %>
+        </select>
+      </.form>
+    </div>
+  </div>
+
+  <div class="mt-8 grid grid-cols-2">
+    <div class="border rounded-xl mx-2 py-8 text-center">
+      Secrets Count
+      <div class="mt-4 text-blue-800 text-2xl">
+        <%= @stats[:secrets_count] %>
+      </div>
+    </div>
+
+    <div class="border rounded-xl mx-2 py-8 text-center">
+      Last Pruned (UTC)
+      <div class="mt-4 text-green-800 text-2xl">
+        <%= @stats[:last_pruned] %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <.table id="secrets" rows={@stats[:secrets]}>
+      <:col :let={secret} label="Title">
+        <%= secret.title %>
+      </:col>
+
+      <:col :let={secret} label="Expires at (UTC)">
+        <%= Timex.format!(secret.expires_at, "%F @ %T", :strftime) %>
+      </:col>
+
+      <:col :let={secret} label="Reads">
+        <%= length(secret.reads) %>
+      </:col>
+
+      <:col :let={secret} label="Max Successful Reads">
+        <%= secret.max_reads %>
+      </:col>
+
+      <:col :let={secret} label="Attempts">
+        <%= length(secret.attempts) %>
+      </:col>
+
+      <:col :let={secret} label="Max Failed Attempts">
+        <%= secret.max_decryption_attempts %>
+      </:col>
+
+      <:col :let={secret} label="Algo">
+        <%= secret.encryption_algo %>
+      </:col>
+    </.table>
+  </div>
+</div>

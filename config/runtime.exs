@@ -57,5 +57,7 @@ if config_env() != :test do
 
   config :heimdall,
     admin_user: System.get_env("ADMIN_USER", "admin"),
-    admin_password: System.get_env("ADMIN_PASSWORD", "admin")
+    admin_password: System.get_env("ADMIN_PASSWORD", "admin"),
+    admin_secrets_show_limit:
+      String.to_integer(System.get_env("ADMIN_SECRETS_SHOW_LIMIT", "200"))
 end
