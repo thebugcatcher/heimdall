@@ -36,7 +36,7 @@ defmodule Heimdall.Secrets do
   end
 
   @doc """
-  TODO
+  Attempts to decrypt a secret using the given decryption_key
   """
   @spec decrypt(Secret.t(), String.t()) :: {:ok, String.t()} | {:error, term()}
   def decrypt(secret, decryption_key) do
@@ -54,7 +54,7 @@ defmodule Heimdall.Secrets do
   end
 
   @doc """
-  TODO
+  Returns a secret with the given ID. Returns nil if none exist.
   """
   @spec get(Ecto.UUID.t()) :: Secret.t() | nil
   def get(secret_id) do
@@ -62,7 +62,7 @@ defmodule Heimdall.Secrets do
   end
 
   @doc """
-  TODO
+  Checks whether secret is not expired or deleted from the database
   """
   @spec not_expired?(Secret.t()) :: boolean()
   def not_expired?(%Secret{id: secret_id}) do
@@ -71,6 +71,23 @@ defmodule Heimdall.Secrets do
     |> Repo.one()
     |> is_nil()
     |> Kernel.not()
+  end
+
+  @doc """
+  Checks whether secret is not stale:
+    not maxed out in terms of attempts or reads
+  """
+  @spec not_stale?(Secret.t()) :: boolean()
+  def not_stale?(%Secret{id: secret_id}) do
+    secret =
+      Secret
+      |> Repo.get(secret_id)
+      |> Repo.preload([:attempts, :reads])
+
+    (is_nil(secret.max_decryption_attempts) or
+       length(secret.attempts) < secret.max_decryption_attempts) and
+      (is_nil(secret.max_reads) or
+         length(secret.reads) < secret.max_reads)
   end
 
   @doc """

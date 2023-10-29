@@ -176,4 +176,47 @@ defmodule Heimdall.SecretsTest do
       assert error == "Error in decryption"
     end
   end
+
+  describe "not_stale?/1" do
+    test "returns true when max reads are greater than secret reads" do
+      {:ok, secret} = Factory.encrypt_and_create(%{max_reads: 2})
+
+      assert Secrets.not_stale?(secret)
+    end
+
+    test "returns false when max reads are less than or eq secret reads" do
+      {:ok, secret} = Factory.encrypt_and_create(%{max_reads: 1})
+
+      _read = Secrets.create_secret_read(secret, "ip", DateTime.utc_now())
+
+      refute Secrets.not_stale?(secret)
+    end
+
+    test "returns true when max reads are nil" do
+      {:ok, secret} = Factory.encrypt_and_create(%{max_reads: nil})
+
+      assert Secrets.not_stale?(secret)
+    end
+
+    test "returns true when max attempts are greater than secret attempts" do
+      {:ok, secret} = Factory.encrypt_and_create(%{max_decryption_attempts: 2})
+
+      assert Secrets.not_stale?(secret)
+    end
+
+    test "returns false when max attempts are less than or eq secret attempts" do
+      {:ok, secret} = Factory.encrypt_and_create(%{max_decryption_attempts: 1})
+
+      _attempt = Secrets.create_secret_attempt(secret, "ip", DateTime.utc_now())
+
+      refute Secrets.not_stale?(secret)
+    end
+
+    test "returns true when max attempts are nil" do
+      {:ok, secret} =
+        Factory.encrypt_and_create(%{max_decryption_attempts: nil})
+
+      assert Secrets.not_stale?(secret)
+    end
+  end
 end

@@ -10,6 +10,7 @@ defmodule HeimdallWeb.SecretRevealerLive do
       socket
       |> assign(:secret, secret)
       |> assign(:decrypted_text, nil)
+      |> assign(:redirect, false)
       |> assign(:ip, ip)
 
     if secret_viewable?(secret, socket) do
@@ -20,10 +21,11 @@ defmodule HeimdallWeb.SecretRevealerLive do
         assign(socket, :secret, secret)
       }
     else
-      {
-        :noreply,
-        socket |> redirect(to: ~p"/secret_404")
-      }
+      socket = assign(socket, :redirect, true)
+
+      Process.send_after(self(), :check_expiration, 1000)
+
+      {:ok, socket}
     end
   end
 
@@ -42,8 +44,9 @@ defmodule HeimdallWeb.SecretRevealerLive do
 
   def handle_info(:check_expiration, socket) do
     secret = socket.assigns[:secret]
+    redirect = socket.assigns[:redirect]
 
-    if secret_viewable?(secret, socket) do
+    if !redirect and Secrets.not_expired?(secret) do
       schedule_expiration_check()
 
       {:noreply, socket}
@@ -86,7 +89,8 @@ defmodule HeimdallWeb.SecretRevealerLive do
   defp secret_viewable?(secret, socket) do
     ip = socket.assigns[:ip]
 
-    Secrets.not_expired?(secret) and Secrets.ip_allowed?(secret, ip)
+    Secrets.not_expired?(secret) and Secrets.not_stale?(secret) and
+      Secrets.ip_allowed?(secret, ip)
   end
 
   defp schedule_expiration_check do
