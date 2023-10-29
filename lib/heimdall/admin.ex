@@ -13,7 +13,7 @@ defmodule Heimdall.Admin do
   Returns Heimdall stats using given parameters
   """
   @spec stats() :: map()
-  def stats() do
+  def stats do
     %{
       secrets_count: secrets_count(),
       last_pruned: last_pruned(),
