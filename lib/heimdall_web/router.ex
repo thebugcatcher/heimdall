@@ -62,7 +62,11 @@ defmodule HeimdallWeb.Router do
     end
   end
 
-  defp admin_auth(conn, _params) do
+  @doc """
+  Plug to add admin-related basic auth
+  """
+  @spec admin_auth(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def admin_auth(conn, _params) do
     Plug.BasicAuth.basic_auth(
       conn,
       username: admin_user(),
