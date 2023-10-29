@@ -1,6 +1,6 @@
 import Config
 
-if System.get_env("PHX_SERVER") do
+if System.get_env("PHX_SERVER", "true") do
   config :heimdall, HeimdallWeb.Endpoint, server: true
 end
 
@@ -23,14 +23,13 @@ if config_env() == :prod do
     socket_options: maybe_ipv6
 
   secret_key_base =
-    System.get_env("SECRET_KEY_BASE") ||
-      raise """
-      environment variable SECRET_KEY_BASE is missing.
-      You can generate one by calling: mix phx.gen.secret
-      """
+    System.get_env(
+      "SECRET_KEY_BASE",
+      "Vbo6JHmYRO2tNqQGtlAKO2qa4aQIP+ABixTgUFhn5gsB9qgpHuTI6epRT+KKnDCJ"
+    )
 
-  host = System.get_env("PHX_HOST") || "example.com"
-  port = String.to_integer(System.get_env("PORT") || "4000")
+  host = System.get_env("PHX_HOST", "")
+  port = String.to_integer(System.get_env("PORT", "4000"))
 
   config :heimdall, HeimdallWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
