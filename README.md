@@ -69,6 +69,24 @@ main features:
 
 ## Installation
 
+### Quick Setup for Demo/Testing (tested on Linux)
+
+Pull the app and run with default config values:
+
+__NOTE: Make sure other already running containers don't interfere with system
+ports `5432` and `4000`__
+
+* `make demo`
+    * This will start up docker containers needed to run the app
+    * Includes `postgres` and `phoenix` containers
+
+* `make setup`
+    * This will run the DB migrations needed and setup your app
+
+* Refer to [Configurations](#configurations) sections for default values.
+
+### Proper setup
+
 Keep the following things in mind:
 
 * Ability to run Elixir or built erlang release

@@ -10,7 +10,7 @@ config :heimdall, Heimdall.Repo,
   pool_size: 10
 
 config :heimdall, HeimdallWeb.Endpoint,
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
