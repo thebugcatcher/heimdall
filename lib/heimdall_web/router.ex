@@ -24,6 +24,8 @@ defmodule HeimdallWeb.Router do
     get "/successfully_created", SecretController, :successfully_created
 
     get "/secrets/:secret_id", SecretController, :show
+
+    get "/secret_404", SecretController, :secret_404
   end
 
   scope "/api", HeimdallWeb.API do

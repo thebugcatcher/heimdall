@@ -44,7 +44,7 @@ defmodule HeimdallWeb.SecretControllerTest do
 
       conn = get(conn, ~p"/successfully_created?secret_id=#{secret_id}")
 
-      assert text_response(conn, 200) =~ "Not Found"
+      assert html_response(conn, 302) =~ "secret_404"
     end
   end
 
@@ -62,7 +62,15 @@ defmodule HeimdallWeb.SecretControllerTest do
 
       conn = get(conn, ~p"/secrets/#{secret_id}")
 
-      assert text_response(conn, 200) =~ "Not Found"
+      assert html_response(conn, 302) =~ "secret_404"
+    end
+  end
+
+  describe "secret_404/2 (GET /secret_404)" do
+    test "renders a page with expected content", %{conn: conn} do
+      conn = get(conn, ~p"/secret_404")
+
+      assert html_response(conn, 200) =~ "Secret doesn't exist"
     end
   end
 end

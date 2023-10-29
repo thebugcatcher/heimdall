@@ -23,7 +23,7 @@ defmodule HeimdallWeb.SecretController do
   def successfully_created(conn, %{"secret_id" => secret_id}) do
     case Secrets.get(secret_id) do
       nil ->
-        text(conn, "Not Found")
+        redirect(conn, to: ~p"/secret_404")
 
       secret ->
         render(conn, :successfully_created, secret: secret)
@@ -33,10 +33,14 @@ defmodule HeimdallWeb.SecretController do
   def show(conn, %{"secret_id" => secret_id}) do
     case Secrets.get(secret_id) do
       nil ->
-        text(conn, "Not Found")
+        redirect(conn, to: ~p"/secret_404")
 
       secret ->
         render(conn, :show, secret: secret)
     end
+  end
+
+  def secret_404(conn, _params) do
+    render(conn, :secret_404)
   end
 end

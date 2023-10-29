@@ -10,6 +10,8 @@ defmodule Heimdall.Secrets do
   alias Heimdall.EncryptionAlgo.RSA
   alias Heimdall.Repo
 
+  import Ecto.Query
+
   @doc """
   Returns a new changeset (with no errors) that can be used in frontend forms
   """
@@ -34,14 +36,6 @@ defmodule Heimdall.Secrets do
   @doc """
   TODO
   """
-  @spec get(Ecto.UUID.t()) :: Secret.t() | nil
-  def get(secret_id) do
-    Repo.get(Secret, secret_id)
-  end
-
-  @doc """
-  TODO
-  """
   @spec decrypt(Secret.t(), String.t()) :: {:ok, String.t()} | {:error, term()}
   def decrypt(secret, decryption_key) do
     algo = secret.encryption_algo
@@ -55,6 +49,26 @@ defmodule Heimdall.Secrets do
     rescue
       _e -> {:error, "Error in decryption"}
     end
+  end
+
+  @doc """
+  TODO
+  """
+  @spec get(Ecto.UUID.t()) :: Secret.t() | nil
+  def get(secret_id) do
+    Repo.get(Secret, secret_id)
+  end
+
+  @doc """
+  TODO
+  """
+  @spec not_expired?(Secret.t()) :: boolean()
+  def not_expired?(%Secret{id: secret_id}) do
+    Secret
+    |> where([s], s.id == ^secret_id and s.expires_at > ^DateTime.utc_now())
+    |> Repo.one()
+    |> is_nil()
+    |> Kernel.not()
   end
 
   defp maybe_encrypt_text(%Changeset{valid?: false} = changeset), do: changeset

@@ -49,4 +49,10 @@ if config_env() != :test do
       String.to_integer(System.get_env("SECRETS_PRUNER_INTERVAL_MS", "30000")),
     delete_query_timeout:
       String.to_integer(System.get_env("DELETE_QUERY_TIMEOUT_MS", "1500"))
+
+  config :heimdall,
+    secret_expiration_check_period_ms:
+      String.to_integer(
+        System.get_env("SECRET_EXPIRATION_CHECK_PERIOD_MS", "5000")
+      )
 end

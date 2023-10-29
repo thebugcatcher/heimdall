@@ -11,6 +11,8 @@ defmodule HeimdallWeb.SecretRevealerLive do
       |> assign(:secret, secret)
       |> assign(:decrypted_text, nil)
 
+    schedule_expiration_check()
+
     {
       :ok,
       assign(socket, :secret, secret)
@@ -27,6 +29,8 @@ defmodule HeimdallWeb.SecretRevealerLive do
           |> put_flash(:info, "Successfully decrypted")
           |> assign(:decrypted_text, decrypted_text)
 
+        schedule_expiration_check()
+
         {:noreply, socket}
 
       {:error, error} ->
@@ -37,5 +41,32 @@ defmodule HeimdallWeb.SecretRevealerLive do
 
         {:noreply, socket}
     end
+  end
+
+  def handle_info(:check_expiration, socket) do
+    secret = socket.assigns[:secret]
+
+    if Secrets.not_expired?(secret) do
+      schedule_expiration_check()
+
+      {:noreply, socket}
+    else
+      {
+        :noreply,
+        socket |> redirect(to: ~p"/secret_404")
+      }
+    end
+  end
+
+  defp schedule_expiration_check do
+    Process.send_after(
+      self(),
+      :check_expiration,
+      expiration_check_period_ms()
+    )
+  end
+
+  defp expiration_check_period_ms do
+    Application.get_env(:heimdall, :secret_expiration_check_period_ms, 1_500)
   end
 end
