@@ -32,7 +32,7 @@ defmodule HeimdallWeb.SecretRevealerLive do
       {:error, error} ->
         socket =
           socket
-          |> put_flash(:error, "Error in decryption")
+          |> put_flash(:error, "Error in decryption:\n #{error}")
           |> assign(:decrypted_text, nil)
 
         {:noreply, socket}
