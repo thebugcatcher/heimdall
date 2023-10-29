@@ -48,10 +48,10 @@ defmodule HeimdallWeb.AdminDashboardLive do
 
   defp update_frequencies do
     [
-      {"1 second", 1_000},
-      {"5 seconds", 5_000},
-      {"10 seconds", 10_000},
-      {"30 seconds", 30_000}
+      {"1s", 1_000},
+      {"5s", 5_000},
+      {"10s", 10_000},
+      {"30s", 30_000}
     ]
   end
 end

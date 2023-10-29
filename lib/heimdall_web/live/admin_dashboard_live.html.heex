@@ -4,13 +4,13 @@
       Admin Dashboard
     </div>
 
-    <div class="col-start-7 text-sm">
+    <div class="col-start-7 text-xs">
       <.form for={%{}} phx-change="change_update_frequency">
-        <.label for="update_frequency">Dashboard Update Frequency</.label>
+        <.label for="update_frequency">Update every</.label>
 
         <select
           name="update_frequency"
-          class="mt-1 block rounded-md border border-gray-300 bg-white shadow-sm focus:border-zinc-400 focus:ring-0 sm:text-sm dark:bg-zinc-600"
+          class="max-w-xs mt-1 rounded-md border border-gray-300 bg-white text-xs"
         >
           <%= for {label, val} <- update_frequencies() do %>
             <option id={ "update_frequencies_#{val}" } value={val}>
