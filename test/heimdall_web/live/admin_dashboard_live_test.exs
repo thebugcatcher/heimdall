@@ -31,12 +31,12 @@ defmodule HeimdallWeb.AdminDashboardLiveTest do
           AdminDashboardLive
         )
 
-      assert html =~ "1 second"
+      assert html =~ "1s"
 
       # Secret is visible after the form is submitted
       assert view
              |> element("form")
-             |> render_change(%{"update_frequency" => "5000"}) =~ "5 seconds"
+             |> render_change(%{"update_frequency" => "5000"}) =~ "5s"
     end
   end
 
