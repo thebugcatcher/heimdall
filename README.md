@@ -19,6 +19,10 @@ via email and password needed to view that data via text, on top of adding an ex
 time to the link, you're adding several layers of security to your information. And best news is
 Heimdall makes doing all the above very easy, so it's a win-win for security and ease!
 
+[__VIDEO DEMO LINK__](https://drive.google.com/file/d/19fuT5-A-rtDx-m336HVY3zjN7yxmpjTC/view?usp=sharing)
+
+[__LIVE_SITE_LINK__](https://heimdall.thebugcatcher.com/)
+
 ## Example
 
 A sender first navigates to Heimdall to create a new secret. The sender can choose
