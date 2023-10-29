@@ -54,4 +54,8 @@ if config_env() != :test do
       String.to_integer(
         System.get_env("SECRET_EXPIRATION_CHECK_PERIOD_MS", "5000")
       )
+
+  config :heimdall,
+    admin_user: System.get_env("ADMIN_USER", "admin"),
+    admin_password: System.get_env("ADMIN_PASSWORD", "admin")
 end

@@ -11,6 +11,17 @@ defmodule HeimdallWeb.Router do
     plug RemoteIp
   end
 
+  pipeline :admin_browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_live_flash
+    plug :put_root_layout, {HeimdallWeb.Layouts, :root}
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+    plug RemoteIp
+    plug :admin_auth
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -29,6 +40,12 @@ defmodule HeimdallWeb.Router do
     get "/secret_404", SecretController, :secret_404
   end
 
+  scope "/admin", HeimdallWeb.Admin do
+    pipe_through :admin_browser
+
+    get "/", DashboardController, :index
+  end
+
   scope "/api", HeimdallWeb.API do
     pipe_through :api
 
@@ -43,5 +60,21 @@ defmodule HeimdallWeb.Router do
 
       live_dashboard "/dashboard", metrics: HeimdallWeb.Telemetry
     end
+  end
+
+  defp admin_auth(conn, _params) do
+    Plug.BasicAuth.basic_auth(
+      conn,
+      username: admin_user(),
+      password: admin_password()
+    )
+  end
+
+  defp admin_user do
+    Application.get_env(:heimdall, :admin_user)
+  end
+
+  defp admin_password do
+    Application.get_env(:heimdall, :admin_password)
   end
 end

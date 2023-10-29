@@ -29,3 +29,7 @@ config :heimdall, dev_routes: true
 config :heimdall, Heimdall.SecretsPruner,
   enabled: true,
   time_interval_ms: 1_000_000
+
+config :heimdall,
+  admin_user: "admin",
+  admin_password: "admin"
