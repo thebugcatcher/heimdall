@@ -5,15 +5,19 @@ defmodule Heimdall.EncryptionAlgo.Plaintext do
 
   @behaviour Heimdall.EncryptionAlgo
 
-  @doc """
-  Simply returns raw text
-  """
-  @impl true
-  def encrypt(raw, _key), do: raw
+  @application_key "120n08ga0sd12e21asd"
+
+  alias Heimdall.EncryptionAlgo.AesGcm
 
   @doc """
   Simply returns raw text
   """
   @impl true
-  def decrypt(raw, _key), do: raw
+  def encrypt(raw, _key), do: AesGcm.encrypt(raw, @application_key)
+
+  @doc """
+  Simply returns raw text
+  """
+  @impl true
+  def decrypt(raw, _key), do: AesGcm.decrypt(raw, @application_key)
 end

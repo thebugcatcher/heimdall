@@ -48,7 +48,7 @@ defmodule Heimdall.SecretsTest do
 
       {:ok, secret} = Secrets.encrypt_and_create(params)
 
-      assert secret.encrypted_text == raw
+      assert secret.encrypted_text != raw
     end
 
     test "successfully encrypts and inserts a secret (for rsa)" do
