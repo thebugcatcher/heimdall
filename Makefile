@@ -14,3 +14,17 @@ ifndef DC
 	$(error "docker-compose is not installed")
 endif
 	$(docker_compose) --file .development/docker-compose.yml up --build -d --remove-orphans
+
+
+demo:
+ifndef DC
+	$(error "docker-compose is not installed")
+endif
+	$(docker_compose) --file .demo/docker-compose.yml up --build --remove-orphans
+
+setup:
+ifndef DC
+	$(error "docker-compose is not installed")
+endif
+	$(docker_compose) --file .demo/docker-compose.yml exec web mix ecto.setup
+

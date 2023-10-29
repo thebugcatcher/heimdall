@@ -178,7 +178,7 @@ others.
 
 This app was built as part of Spawnfest 2023 by a wife + husband team: Susan Walker and Adi Iyengar.
 Susan has always been interested in Elixir and BEAM-based languages, and Adi being comfortable with
-them thought it would be a fun couple's activity to try and build Heimdall at Spawsfest.
+them thought it would be a fun couple's activity to try and build Heimdall at Spawnfest.
 
 * [@thebugcatcher](https://github.com/thebugcatcher)
 * [@susanwalker](https://github.com/susanwalker)

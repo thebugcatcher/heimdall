@@ -1,0 +1,35 @@
+ARG MIX_ENV="dev"
+
+FROM hexpm/elixir:1.14.4-erlang-26.0-alpine-3.17.3 as build
+
+# install build dependencies
+RUN apk add --no-cache build-base \
+  git \
+  python3 \
+  curl \
+  nodejs \
+  npm \
+  inotify-tools \
+  git
+
+# prepare build dir
+WORKDIR /app
+
+COPY . .
+
+# install hex + rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+RUN mix deps.get
+
+ARG HEIMDALL_DB_HOST
+ARG HEIMDALL_DB_USERNAME
+ARG HEIMDALL_DB_PASSWORD
+ENV HEIMDALL_DB_HOST=${HEIMDALL_DB_HOST}
+ENV HEIMDALL_DB_USERNAME=${HEIMDALL_DB_USERNAME}
+ENV HEIMDALL_DB_PASSWORD=${HEIMDALL_DB_PASSWORD}
+
+RUN printenv
+
+CMD ["mix", "phx.server"]
