@@ -31,10 +31,7 @@ defmodule Heimdall.Admin do
     pid = Process.whereis(SecretsPruner)
 
     cond do
-      is_nil(pid) ->
-        "N/A"
-
-      pid |> :sys.get_state() |> is_nil() ->
+      is_nil(pid) or pid |> :sys.get_state() |> is_nil() ->
         "N/A"
 
       datetime = :sys.get_state(pid) ->
