@@ -25,7 +25,7 @@ A sender first navigates to Heimdall to create a new secret. The sender can choo
 an encryption algorithm (to encrypt the secret at rest), expiration time and
 other parameters before hitting the "Create" button. Upon creation, Heimdall will
 give the sender an option to copy a shareable link to the secret. The sender can
-then share the link with a receiver, who upon navigatin to the page will be
+then share the link with a receiver, who upon navigating to the page will be
 prompted for a password (or a key) which is needed for decrypting the secret. If
 the receiver uses the correct key within the expiration period, the receiver
 can get the secret.
@@ -62,7 +62,7 @@ sequenceDiagram
 ```
 
 You might think if I need to share a URL with the receiver why not just share
-the secret directly instead of using Heimdall. Heimdall's power comes with two
+the secret directly instead of using Heimdall? Heimdall's power comes with two
 main features:
 * Ability to share URL with TLL, max reads, IP address filtering etc
 * Ability to encrypt secret as an added layer of protection
@@ -87,6 +87,7 @@ main features:
 * Ability to provide Max failed decryption attempts, after which the secret is effectively stale.
 * Ability to provide Max successful reads, after which the secret is effectively stale.
 * Ability to whitelist received IP addresses using IP Regex.
+* Auto deletion of expired secrets
 
 
 ## Configurations
@@ -137,11 +138,13 @@ others.
 
 This app was built as part of Spawnfest 2023 by a wife + husband team: Susan Walker and Adi Iyengar.
 Susan has always been interested in Elixir and BEAM-based languages, and Adi being comfortable with
-them thought it would be a fun couple's activity to try and build Heimdall at Spanwfest.
+them thought it would be a fun couple's activity to try and build Heimdall at Spawsfest.
 
 * [@thebugcatcher](https://github.com/thebugcatcher)
 * [@susanwalker](https://github.com/susanwalker)
 
 ## Similar Apps
 
-* [snappass](https://github.com/pinterest/snappass)
+* [snappass](https://github.com/pinterest/snappass): SnapPass is a great app, but it doesn't have many of
+  Heimdall's features. It doesn't have the ability to password-protect the secret, auto-refresh after expiration,
+  IP-address whitelisting etc. Also, it's not powered by BEAM!
